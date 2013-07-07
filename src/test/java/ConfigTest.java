@@ -8,10 +8,16 @@ import static org.hamcrest.Matchers.is;
 
 public class ConfigTest {
 
-    @Test
-    public void shouldWorkWithoutExplicitConfig() {
+    @Before
+    public void setUp() {
         server().kill();
         config().reset();
+    }
+
+
+    @Test
+    public void shouldWorkWithoutExplicitConfig() {
+
         server().bind(new SomeClass()).to("someInterface");
 
         SomeClass remoteRmi = client().get("someInterface").as(SomeClass.class);
@@ -20,8 +26,6 @@ public class ConfigTest {
 
     @Test
     public void shouldWorkOnIpAddressAndDifferentPort() {
-        server().kill();
-        config().reset();
 
         config().setHostname("127.0.0.1");
         config().setPort(6899);
@@ -34,13 +38,11 @@ public class ConfigTest {
 
     @Test(expected = FluentRmiException.class)
     public void shouldFailToConnectOnDifferentSettings() {
-        server().kill();
-        config().reset();
 
         server().bind(new SomeClass()).to("someInterface");
 
         config().setHostname("127.0.0.1");
-        config().setPort(6899);
+        config().setPort(6888);
 
         SomeClass remoteRmi = client().get("someInterface").as(SomeClass.class);
         assertThat(remoteRmi.getText(), is("trying"));
