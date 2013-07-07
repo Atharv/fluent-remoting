@@ -1,4 +1,5 @@
 import com.github.tasubo.FluentRmiException;
+import org.junit.Before;
 import org.junit.Test;
 
 import static com.github.tasubo.FluentRmi.*;
@@ -11,7 +12,6 @@ public class ConfigTest {
     public void shouldWorkWithoutExplicitConfig() {
         server().kill();
         config().reset();
-
         server().bind(new SomeClass()).to("someInterface");
 
         SomeClass remoteRmi = client().get("someInterface").as(SomeClass.class);

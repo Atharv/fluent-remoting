@@ -1,14 +1,23 @@
 import com.github.tasubo.FluentRmi;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.Serializable;
 
+import static com.github.tasubo.FluentRmi.config;
+import static com.github.tasubo.FluentRmi.server;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class NestedCallsTest {
 
     static SomeInterface object = new SomeInterfaceImplementation();
+
+    @Before
+    public void setUp() {
+        server().kill();
+        config().reset();
+    }
 
     @Test
     public void howServerShouldWork() {

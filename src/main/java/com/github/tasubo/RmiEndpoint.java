@@ -6,6 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +44,12 @@ public class RmiEndpoint {
             String hostname = rmiConfig.getHostname();
 
             Remote stub = UnicastRemoteObject.exportObject(rmiWrapper, port);
-            Registry registry = LocateRegistry.createRegistry(port);
+            Registry registry;
+            try {
+                registry = LocateRegistry.createRegistry(port);
+            } catch (ExportException e) {
+                registry = LocateRegistry.getRegistry(port);
+            }
             registry.rebind(ENDPOINT_NAME, stub);
         } catch (RemoteException e) {
             throw new FluentRmiException(e);
